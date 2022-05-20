@@ -7,12 +7,12 @@ const Follower = ({ number, name, money, image, following }) => <div className='
       <p className='assets-number' style={{ width: '25px', textAlign: 'center' }}>{number}</p>
       <div className='assets-owner'>
         <div className='owner-thumb veryfied'>
-          <Link to='/author'><img
+          <Link to='/author/123'><img
             src={image}
             alt='seller-img' /></Link>
         </div>
         <div className='owner-content'>
-          <h5><Link to='/author'>{name}</Link>
+          <h5><Link to='/author/123'>{name}</Link>
           </h5>
           <p>${money}</p>
         </div>

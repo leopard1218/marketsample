@@ -13,7 +13,7 @@ const Banner = ({ address }) => <section className='banner-section style-2' styl
             <div className='banner-btns d-flex flex-wrap justify-content-center'>
               <Link to='/explore/all' className='default-btn home-2 move-top'
                 data-blast='bgColor'><span>Explore</span> </Link>
-              <Link to={address ? '/author' : '/wallet'} className='default-btn home-2 move-right'><span>Sell</span>
+              <Link to={address ? '/author/123' : '/wallet'} className='default-btn home-2 move-right'><span>Sell</span>
               </Link>
             </div>
           </div>

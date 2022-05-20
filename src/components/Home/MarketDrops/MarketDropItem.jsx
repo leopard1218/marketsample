@@ -7,14 +7,14 @@ const MarketDropItem = ({ author, authorImgs, authorImg, nftName, nftImg, price,
         <ul className='author-list d-flex'>
           {
             authorImgs.map((athImg, index) => <li className='single-author' key={index}>
-              <Link to='/author'><img loading='lazy'
+              <Link to='/author/123'><img loading='lazy'
                 src={athImg} alt='author-img' /></Link>
             </li>)
           }
           <li className='single-author d-flex align-items-center'>
-            <Link to='/author' className='veryfied'><img loading='lazy'
+            <Link to='/author/123' className='veryfied'><img loading='lazy'
               src={authorImg} alt='author-img' /></Link>
-            <h6><Link to='/author'>{author}</Link></h6>
+            <h6><Link to='/author/123'>{author}</Link></h6>
           </li>
         </ul>
       </div>

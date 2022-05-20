@@ -24,6 +24,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       }
     case UPDATE_PROFILE:
       const { userInfo } = action
+      console.log('updating profile:', userInfo)
       return {
         ...state,
         currentUser: {

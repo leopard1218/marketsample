@@ -6,9 +6,8 @@ import BigNumber from 'bignumber.js'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import AuctionItem from '../explore/Auctions/AuctionItem'
 import NFTItem from '../explore/ExploreAll/NFTItem'
-// import CustomSelect from '../common/CustomSelect'
 
-const Author = ({ address, name, description, collection, data, type, royalty, category, banner, title, metadata, editing, userInfo, subCategory, copies, userWallet, setName, setDescription, setCollection, setRoyalty, setCategory, setTitle, setEditing, setUserInfo, setCurrentSelCat, setGroup, setCopies, onFileChanged, onBannerChanged, create, onSubmit, onCancel, onChangePhoto }) => {
+const Author = ({ address, name, description, data, type, currency, price, royalty, category, banner, title, metadata, editing, userInfo, subCategory, copies, setName, setDescription, setPrice, setRoyalty, setCategory, setTitle, setEditing, setUserInfo, setCurrentSelCat, setGroup, setCopies, onFileChanged, onBannerChanged, create, onSubmit, onCancel, onChangePhoto }) => {
   const [copied, setCopied] = useState(false)
   const categories = [
     {
@@ -39,6 +38,11 @@ const Author = ({ address, name, description, collection, data, type, royalty, c
           <div className='profile-item'>
             <div className='profile-cover'>
               <img src='/assets/images/profile/cover.jpg' alt='cover-pic' />
+              {/* <div className='edit-photo custom-upload'>
+                <div className='file-btn'><i className='icofont-camera'></i>
+                  Edit Photo</div>
+                <input type='file' />
+              </div> */}
             </div>
             <div className='profile-information'>
               <div className='profile-pic'>
@@ -59,7 +63,7 @@ const Author = ({ address, name, description, collection, data, type, royalty, c
               <ul className='profile-contact'>
                 <li className='crypto-copy'>
                   <div id='cryptoCode' className='crypto-page'>
-                    <input id='cryptoLink' value={!!address ? `${address.substr(0, 8)}...${address.substr(address.length - 5, 5)}` : ''}
+                    <input id='cryptoLink' defaultValue={!!address ? `${address.substr(0, 8)}...${address.substr(address.length - 5, 5)}` : ''}
                       readOnly />
                     <div id='cryptoCopy' data-bs-toggle='tooltip' data-bs-placement='top'
                       title='Copy Address'>
@@ -126,9 +130,11 @@ const Author = ({ address, name, description, collection, data, type, royalty, c
             <nav className='profile-nav'>
               <div className='nav nav-tabs' id='nav-tab' role='tablist'>
                 <button className='nav-link active' id='nav-allNft-tab' data-bs-toggle='tab'
-                  data-bs-target='#allNft' type='button' role='tab' aria-controls='allNft'>All NFT's</button>
+                  data-bs-target='#allNft' type='button' role='tab' aria-controls='allNft'
+                  aria-selected='true'>All NFT's</button>
                 <button className='nav-link' id='nav-about-tab' data-bs-toggle='tab' data-bs-target='#about'
-                  type='button' role='tab' aria-controls='about'>About</button>
+                  type='button' role='tab' aria-controls='about' aria-selected='false'>About</button>
+
               </div>
             </nav>
             <div className='tab-content' id='nav-tabContent'>
@@ -139,60 +145,42 @@ const Author = ({ address, name, description, collection, data, type, royalty, c
                       <article>
                         <div className='activity-tab'>
                           <ul className='nav nav-pills mb-30 px-2' id='pills-tab' role='tablist'>
-                            {
-                              !userWallet && <li className='nav-item' role='presentation'>
-                                <button className={cx('nav-link', { active: title === 'create' })}
-                                  data-bs-toggle='pill' type='button' role='tab' aria-controls='pills-personal'
-                                  onClick={() => setTitle('create')}>
-                                  <i className='icofont-flask'></i>Create NFT</button>
-                              </li>
-                            }
                             <li className='nav-item' role='presentation'>
-                              <button className={cx('nav-link', { active: title === 'sale' })}
+                              <button className='nav-link'
+                                data-bs-toggle='pill' type='button' role='tab' aria-controls='pills-personal'
+                                aria-selected='false' onClick={() => setTitle('create')}>
+                                <i className='icofont-flask'></i>Create NFT</button>
+                            </li>
+                            <li className='nav-item' role='presentation'>
+                              <button className='nav-link active'
                                 data-bs-toggle='pill' type='button' aria-controls='pills-mentions'
-                                onClick={() => setTitle('sale')}>
+                                aria-selected='true' onClick={() => setTitle('sale')}>
                                 <i className='icofont-flash'></i>On Sale</button>
                             </li>
                             <li className='nav-item' role='presentation'>
-                              <button className={cx('nav-link', { active: title === 'own' })}
+                              <button className='nav-link'
                                 data-bs-toggle='pill' type='button' role='tab' aria-controls='pills-favorites'
-                                onClick={() => setTitle('own')}>
-                                <i className='icofont-license'></i>Owning</button>
+                                aria-selected='false' onClick={() => setTitle('own')}>
+                                <i className='icofont-license'></i>My Items</button>
                             </li>
-                            {/* <li className='nav-item' role='presentation'>
-                              <button className={cx('nav-link', { active: title === 'createcollection' })}
-                                data-bs-toggle='pill' type='button' role='tab' aria-controls='pills-favorites'
-                                onClick={() => setTitle('createcollection')}>
-                                <i className='icofont-license'></i>Create Collection</button>
+                            <li className='custom-select'>
+                              <select id="selectBox" onChange={e => {
+                                setGroup(e.target.value);
+                                setCurrentSelCat('All Categories');
+                              }}>
+                                <option value='collection'>Collections</option>
+                                <option value='created'>Custom</option>
+                              </select>
                             </li>
-                            <li className='nav-item' role='presentation'>
-                              <button className={cx('nav-link', { active: title === 'collections' })}
-                                data-bs-toggle='pill' type='button' role='tab' aria-controls='pills-favorites'
-                                onClick={() => setTitle('collections')}>
-                                <i className='icofont-license'></i>Collections</button>
-                            </li> */}
-                            {
-                              (title === 'sale' || title === 'own') && <li className='custom-select'>
-                                <select id="selectBox" onChange={e => {
-                                  setGroup(e.target.value);
-                                  setCurrentSelCat('All Categories');
-                                }}>
-                                  <option value='collection'>Collections</option>
-                                  <option value='created'>Created</option>
-                                </select>
-                              </li>
-                            }
-                            {
-                              (title === 'sale' || title === 'own') && <li className='custom-select' style={{ marginLeft: 0 }}>
-                                <select id="selectBox1" onChange={e => setCurrentSelCat(e.target.value)}>
-                                  {
-                                    subCategory.map((cat, index) =>
-                                      <option key={index} value={cat}>{cat}</option>
-                                    )
-                                  }
-                                </select>
-                              </li>
-                            }
+                            <li className='custom-select' style={{ marginLeft: 0 }}>
+                              <select id="selectBox1" onChange={e => setCurrentSelCat(e.target.value)}>
+                                {
+                                  subCategory.map((cat, index) =>
+                                    <option key={index} value={cat}>{cat}</option>
+                                  )
+                                }
+                              </select>
+                            </li>
                           </ul>
                           <div className='tab-content activity-content' id='pills-tabContent'>
                             <div className='tab-pane' role='tabpanel' style={{ display: title === 'create' ? 'block' : 'none' }}>
@@ -212,7 +200,7 @@ const Author = ({ address, name, description, collection, data, type, royalty, c
                                           <div className='file-btn'><i
                                             className='icofont-upload-alt'></i>
                                             Upload a file</div>
-                                          <input type='file' onChange={onFileChanged} />
+                                          <input type='file' onChange={onFileChanged} multiple />
                                         </div>
                                       </div>
                                       {
@@ -247,33 +235,53 @@ const Author = ({ address, name, description, collection, data, type, royalty, c
                                         <label htmlFor='itemDesc'>Item
                                           Description</label>
                                       </div>
-                                      <h4>Select Item Catergory</h4>
-                                      <div className='row'>
-                                        <div className='col-lg-6 col-md-12'>
-                                          <div className='item-category-field mb-30'>
-                                            <ul
-                                              className='item-cat-list d-flex flex-wrap'>
-                                              {
-                                                categories.map(ctgr => <li key={ctgr.name} className={cx('item-cat-btn', { active: ctgr.name === category })} onClick={e => setCategory(ctgr.name)} style={{ height: '58px', display: 'flex', alignItems: 'center' }}>
-                                                  <span><i
-                                                    className={ctgr.icon}></i></span>
-                                                  {ctgr.name}
-                                                </li>)
-                                              }
-                                            </ul>
-                                          </div>
-                                        </div>
-                                        {/* <div className='col-lg-6 col-md-12'>
-                                          <CustomSelect label='Collections' options={[
-                                            '',
-                                            'Collection1',
-                                            'Collection2',
-                                            'OtherCollection'
-                                          ]} value={collection} onChange={val => setCollection(val)} />
-                                        </div> */}
+                                      <div className='item-category-field mb-30'>
+                                        <h4>Select Item Catergory</h4>
+                                        <ul
+                                          className='item-cat-list d-flex flex-wrap'>
+                                          {
+                                            categories.map(ctgr => <li key={ctgr.name} className={cx('item-cat-btn', { active: ctgr.name === category })} onClick={e => setCategory(ctgr.name)}>
+                                              <span><i
+                                                className={ctgr.icon}></i></span>
+                                              {ctgr.name}
+                                            </li>)
+                                          }
+                                        </ul>
                                       </div>
                                       <div className='item-price-field mb-3'>
                                         <div className='row g-3'>
+                                          {/* <div className='col-md-4 col-sm-12'>
+                                            <div className='form-floating'>
+                                              <select className='form-select'
+                                                id='selectCrypto'
+                                                aria-label='Floating label select'
+                                                value={currency}>
+                                                <option value={0}>
+                                                  VeChain
+                                                </option>
+                                                <option value={1}>
+                                                  VeStacks
+                                                </option>
+                                              </select>
+                                              <label
+                                                htmlFor='selectCrypto'>Select
+                                                Currency</label>
+                                            </div>
+                                          </div> */}
+                                          {/* <div className='col-md-6 col-sm-12'>
+                                            <div className='form-floating'>
+                                              <input type='number'
+                                                className='form-control'
+                                                id='itemPriceInput'
+                                                placeholder='Item Price'
+                                                value={price}
+                                                min={0}
+                                                onChange={e => setPrice(e.target.value)} />
+                                              <label
+                                                htmlFor='itemPriceInput'>Item
+                                                Price</label>
+                                            </div>
+                                          </div> */}
                                           <div className='col-md-6 col-sm-12'>
                                             <div className='form-floating'>
                                               <input type='number'
@@ -319,7 +327,7 @@ const Author = ({ address, name, description, collection, data, type, royalty, c
                                   metadata.map((item, index) =>
                                     <div key={index} className='col-lg-3 col-sm-4'>
                                       {
-                                        !!item.endAt ? <AuctionItem group={item.group} groupImage={item.groupImage} bidderImgs={['/assets/images/seller/05.png']} winnerImg='/assets/images/seller/05.gif' winnerName='' nftName={item.name} love={278} nftImg={item.image} contract={item.contract} tokenId={item.tokenId} endAt={item.endAt} price={`${BigNumber(item.price).dividedBy(BigNumber('1000000000000000000')).toFixed(0)} VET`} /> : <NFTItem group={item.group} groupImage={item.groupImage} bidderImgs={['/assets/images/seller/05.png']} winnerImg='/assets/images/seller/05.gif' winnerName='' nftName={item.name} love={278} nftImg={item.image} contract={item.contract} tokenId={item.tokenId} price={`${BigNumber(item.price).dividedBy(BigNumber('1000000000000000000')).toFixed(0)} VET`} />
+                                        !!item.endAt ? <AuctionItem group={item.group} groupImage={item.groupImage} bidderImgs={['/assets/images/seller/05.png']} winnerImg='/assets/images/seller/05.gif' winnerName='' nftName={item.name} love={278} nftImg={item.image} contract={item.contract} tokenId={item.tokenId} endAt={item.endAt} price={`${BigNumber(item.price).dividedBy(BigNumber('1000000000000000000')).toFixed(3)} VET`} /> : <NFTItem group={item.group} groupImage={item.groupImage} bidderImgs={['/assets/images/seller/05.png']} winnerImg='/assets/images/seller/05.gif' winnerName='' nftName={item.name} love={278} nftImg={item.image} contract={item.contract} tokenId={item.tokenId} price={`${BigNumber(item.price).dividedBy(BigNumber('1000000000000000000')).toFixed(3)} VET`} />
                                       }
                                     </div>
                                   )
@@ -348,425 +356,6 @@ const Author = ({ address, name, description, collection, data, type, royalty, c
                                 }
                               </div>
                               {/* <LoadMore /> */}
-                            </div>
-                            <div className='tab-pane' role='tabpanel' style={{ display: title === 'createcollection' ? 'block' : 'none' }}>
-                              <div className='row'>
-                                <div className='col'>
-                                  <div className='create-nft py-5 px-4'>
-                                    <form className='create-nft-form'>
-                                      <div className='upload-item mb-30'>
-                                        {!data && <p>Logo Image</p>}
-                                        {!!data && type === 'image' && <img className='mb-3' style={{ width: '100%', height: 'auto' }} src={data} alt='no-content' />}
-                                        <div className='custom-upload'>
-                                          <div className='file-btn'><i
-                                            className='icofont-upload-alt'></i>
-                                            Upload Logo</div>
-                                          <input type='file' onChange={onFileChanged} />
-                                        </div>
-                                      </div>
-
-                                      <div
-                                        className='form-floating item-name-field mb-3'>
-                                        <input type='text' className='form-control'
-                                          id='itemNameInput'
-                                          placeholder='Item Name'
-                                          value={name}
-                                          onChange={e => setName(e.target.value)} />
-                                        <label htmlFor='itemNameInput'>Collection Name</label>
-                                      </div>
-                                      <div className='submit-btn-field text-center'>
-                                        <button type='button' onClick={e => create()}>Create Collection</button>
-                                      </div>
-                                    </form>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className='tab-pane' id='pills-groups' role='tabpanel' style={{ display: title === 'collections' ? 'block' : 'none' }}>
-                              <div className="row justify-content-center gx-3 gy-2">
-                                <div className="col-lg-3 col-sm-4">
-                                  <div className="nft-item">
-                                    <div className="nft-inner">
-                                      <div
-                                        className="nft-item-top d-flex justify-content-between align-items-center">
-                                        <div className="author-part">
-                                          <ul className="author-list d-flex">
-                                            <li className="single-author">
-                                              <a href="author.html"><img
-                                                src="assets/images/seller/02.png"
-                                                alt="author-img" /></a>
-                                            </li>
-                                            <li
-                                              className="single-author d-flex align-items-center">
-                                              <a href="author.html"
-                                                className="veryfied"><img
-                                                  src="assets/images/seller/04.png"
-                                                  alt="author-img" /></a>
-                                              <h6><a href="author.html">Jhon
-                                                Doe</a>
-                                              </h6>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                        <div className="more-part">
-                                          <div className=" dropstart">
-                                            <a className=" dropdown-toggle"
-                                              href="#" role="button"
-                                              data-bs-toggle="dropdown"
-                                              aria-expanded="false"
-                                              data-bs-offset="25,0">
-                                              <i
-                                                className="icofont-flikr"></i>
-                                            </a>
-
-                                            <ul className="dropdown-menu">
-                                              <li><a className="dropdown-item"
-                                                href="#"><span>
-                                                  <i
-                                                    className="icofont-warning"></i>
-                                                </span> Report </a>
-                                              </li>
-                                              <li><a className="dropdown-item"
-                                                href="#"><span><i
-                                                  className="icofont-reply"></i></span>
-                                                Share</a></li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="nft-item-bottom">
-                                        <div className="nft-thumb">
-                                          <img src="assets/images/nft-item/03.gif"
-                                            alt="nft-img" />
-                                        </div>
-                                        <div className="nft-content">
-                                          <h4><a href="item-details.html">Walking
-                                            On
-                                            Air</a> </h4>
-                                          <div
-                                            className="price-like d-flex justify-content-between align-items-center">
-                                            <p className="nft-price">Price:
-                                              <span
-                                                className="yellow-color">0.34
-                                                ETH</span>
-                                            </p>
-                                            <a href="#"
-                                              className="nft-like theme-color"><i
-                                                className="icofont-heart"></i>
-                                              230</a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-lg-3 col-sm-4">
-                                  <div className="nft-item">
-                                    <div className="nft-inner">
-                                      <div
-                                        className="nft-item-top d-flex justify-content-between align-items-center">
-                                        <div className="author-part">
-                                          <ul className="author-list d-flex">
-                                            <li
-                                              className="single-author d-flex align-items-center">
-                                              <a href="author.html"
-                                                className="veryfied"><img
-                                                  src="assets/images/seller/04.gif"
-                                                  alt="author-img" /></a>
-                                              <h6><a href="author.html">Gucci
-                                                Lucas</a></h6>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                        <div className="more-part">
-                                          <div className=" dropstart">
-                                            <a className=" dropdown-toggle"
-                                              href="#" role="button"
-                                              data-bs-toggle="dropdown"
-                                              aria-expanded="false"
-                                              data-bs-offset="25,0">
-                                              <i
-                                                className="icofont-flikr"></i>
-                                            </a>
-
-                                            <ul className="dropdown-menu">
-                                              <li><a className="dropdown-item"
-                                                href="#"><span>
-                                                  <i
-                                                    className="icofont-warning"></i>
-                                                </span> Report </a>
-                                              </li>
-                                              <li><a className="dropdown-item"
-                                                href="#"><span><i
-                                                  className="icofont-reply"></i></span>
-                                                Share</a></li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="nft-item-bottom">
-                                        <div className="nft-thumb">
-                                          <img src="assets/images/nft-item/07.jpg"
-                                            alt="nft-img" />
-                                        </div>
-                                        <div className="nft-content">
-                                          <h4><a href="item-details.html">EUPHORIA
-                                            de</a>
-                                          </h4>
-                                          <div
-                                            className="price-like d-flex justify-content-between align-items-center">
-                                            <p className="nft-price">Price:
-                                              <span
-                                                className="yellow-color">0.34
-                                                ETH</span>
-                                            </p>
-                                            <a href="#"
-                                              className="nft-like theme-color"><i
-                                                className="icofont-heart"></i>
-                                              230</a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-lg-3 col-sm-4">
-                                  <div className="nft-item">
-                                    <div className="nft-inner">
-                                      <div
-                                        className="nft-item-top d-flex justify-content-between align-items-center">
-                                        <div className="author-part">
-                                          <ul className="author-list d-flex">
-                                            <li className="single-author">
-                                              <a href="author.html"><img
-                                                src="assets/images/seller/05.png"
-                                                alt="author-img" /></a>
-                                            </li>
-                                            <li className="single-author">
-                                              <a href="author.html"><img
-                                                src="assets/images/seller/02.png"
-                                                alt="author-img" /></a>
-                                            </li>
-                                            <li
-                                              className="single-author d-flex align-items-center">
-                                              <a href="author.html"
-                                                className="veryfied"><img
-                                                  src="assets/images/seller/05.gif"
-                                                  alt="author-img" /></a>
-                                              <h6><a href="author.html">Ecalo
-                                                jers</a></h6>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                        <div className="more-part">
-                                          <div className=" dropstart">
-                                            <a className=" dropdown-toggle"
-                                              href="#" role="button"
-                                              data-bs-toggle="dropdown"
-                                              aria-expanded="false"
-                                              data-bs-offset="25,0">
-                                              <i
-                                                className="icofont-flikr"></i>
-                                            </a>
-
-                                            <ul className="dropdown-menu">
-                                              <li><a className="dropdown-item"
-                                                href="#"><span>
-                                                  <i
-                                                    className="icofont-warning"></i>
-                                                </span> Report </a>
-                                              </li>
-                                              <li><a className="dropdown-item"
-                                                href="#"><span><i
-                                                  className="icofont-reply"></i></span>
-                                                Share</a></li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="nft-item-bottom">
-                                        <div className="nft-thumb">
-                                          <img src="assets/images/nft-item/06.gif"
-                                            alt="nft-img" />
-                                        </div>
-                                        <div className="nft-content">
-                                          <h4><a href="item-details.html">Mewao
-                                            com de</a>
-                                          </h4>
-                                          <div
-                                            className="price-like d-flex justify-content-between align-items-center">
-                                            <p className="nft-price">Price:
-                                              <span
-                                                className="yellow-color">0.34
-                                                ETH</span>
-                                            </p>
-                                            <a href="#"
-                                              className="nft-like theme-color"><i
-                                                className="icofont-heart"></i>
-                                              278</a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-lg-3 col-sm-4">
-                                  <div className="nft-item">
-                                    <div className="nft-inner">
-                                      <div
-                                        className="nft-item-top d-flex justify-content-between align-items-center">
-                                        <div className="author-part">
-                                          <ul className="author-list d-flex">
-                                            <li className="single-author">
-                                              <a href="author.html"><img
-                                                src="assets/images/seller/02.gif"
-                                                alt="author-img" /></a>
-                                            </li>
-                                            <li className="single-author">
-                                              <a href="author.html"><img
-                                                src="assets/images/seller/07.png"
-                                                alt="author-img" /></a>
-                                            </li>
-                                            <li
-                                              className="single-author d-flex align-items-center">
-                                              <a href="author.html"
-                                                className="veryfied"><img
-                                                  src="assets/images/seller/01.png"
-                                                  alt="author-img" /></a>
-                                              <h6><a href="author.html">Hola
-                                                moc</a>
-                                              </h6>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                        <div className="more-part">
-                                          <div className=" dropstart">
-                                            <a className=" dropdown-toggle"
-                                              href="#" role="button"
-                                              data-bs-toggle="dropdown"
-                                              aria-expanded="false"
-                                              data-bs-offset="25,0">
-                                              <i
-                                                className="icofont-flikr"></i>
-                                            </a>
-
-                                            <ul className="dropdown-menu">
-                                              <li><a className="dropdown-item"
-                                                href="#"><span>
-                                                  <i
-                                                    className="icofont-warning"></i>
-                                                </span> Report </a>
-                                              </li>
-                                              <li><a className="dropdown-item"
-                                                href="#"><span><i
-                                                  className="icofont-reply"></i></span>
-                                                Share</a></li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="nft-item-bottom">
-                                        <div className="nft-thumb">
-                                          <img src="assets/images/nft-item/04.jpg"
-                                            alt="nft-img" />
-                                        </div>
-                                        <div className="nft-content">
-                                          <h4><a href="item-details.html">pet
-                                            mice rio</a>
-                                          </h4>
-                                          <div
-                                            className="price-like d-flex justify-content-between align-items-center">
-                                            <p className="nft-price">Price:
-                                              <span
-                                                className="yellow-color">0.34
-                                                ETH</span>
-                                            </p>
-                                            <a href="#"
-                                              className="nft-like theme-color"><i
-                                                className="icofont-heart"></i>
-                                              340</a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="col-lg-3 col-sm-4">
-                                  <div className="nft-item">
-                                    <div className="nft-inner">
-                                      <div
-                                        className="nft-item-top d-flex justify-content-between align-items-center">
-                                        <div className="author-part">
-                                          <ul className="author-list d-flex">
-                                            <li className="single-author">
-                                              <a href="author.html"><img
-                                                src="assets/images/seller/03.png"
-                                                alt="author-img" /></a>
-                                            </li>
-                                            <li
-                                              className="single-author d-flex align-items-center">
-                                              <a href="author.html"
-                                                className="veryfied"><img
-                                                  src="assets/images/seller/04.png"
-                                                  alt="author-img" /></a>
-                                              <h6><a href="author.html">Logicto
-                                                pen</a></h6>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                        <div className="more-part">
-                                          <div className=" dropstart">
-                                            <a className=" dropdown-toggle"
-                                              href="#" role="button"
-                                              data-bs-toggle="dropdown"
-                                              aria-expanded="false"
-                                              data-bs-offset="25,0">
-                                              <i
-                                                className="icofont-flikr"></i>
-                                            </a>
-
-                                            <ul className="dropdown-menu">
-                                              <li><a className="dropdown-item"
-                                                href="#"><span>
-                                                  <i
-                                                    className="icofont-warning"></i>
-                                                </span> Report </a>
-                                              </li>
-                                              <li><a className="dropdown-item"
-                                                href="#"><span><i
-                                                  className="icofont-reply"></i></span>
-                                                Share</a></li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="nft-item-bottom">
-                                        <div className="nft-thumb">
-                                          <img src="assets/images/nft-item/05.gif"
-                                            alt="nft-img" />
-                                        </div>
-                                        <div className="nft-content">
-                                          <h4><a href="item-details.html">Logical
-                                            Impact </a>
-                                          </h4>
-                                          <div
-                                            className="price-like d-flex justify-content-between align-items-center">
-                                            <p className="nft-price">Price:
-                                              <span
-                                                className="yellow-color">0.34
-                                                ETH</span>
-                                            </p>
-                                            <a href="#"
-                                              className="nft-like theme-color"><i
-                                                className="icofont-heart"></i>
-                                              330</a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -911,11 +500,9 @@ const Author = ({ address, name, description, collection, data, type, royalty, c
                                   <p className='info-name'>Address</p>
                                   <p className='info-details'>{userInfo.address}</p>
                                 </li>
-                                {
-                                  !userWallet && <div className='submit-btn-field text-center'>
-                                    <button type='button' onClick={e => setEditing(true)}>Edit</button>
-                                  </div>
-                                }
+                                <div className='submit-btn-field text-center'>
+                                  <button type='button' onClick={e => setEditing(true)}>Edit</button>
+                                </div>
                               </ul>
                               </div>
                             }

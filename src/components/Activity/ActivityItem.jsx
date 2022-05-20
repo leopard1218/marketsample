@@ -11,7 +11,7 @@ const ActivityItem = ({ title, description, price, by, at, image }) => <div clas
       <p className='mb-2'>{description}
         <b>{price}</b>
       </p>
-      <p className='user-id'>By: <Link to='/author'>{by}</Link></p>
+      <p className='user-id'>By: <Link to='/author/123'>{by}</Link></p>
       <p>At: {at}</p>
     </div>
   </div>

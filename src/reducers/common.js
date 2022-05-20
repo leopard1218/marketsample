@@ -1,15 +1,10 @@
 import {
   START_ACTION,
-  END_ACTION,
-  SHOW_TOAST,
-  HIDE_TOAST
+  END_ACTION
 } from '../constants/actionTypes/common'
 
 const INITIAL_STATE = {
-  loading: false,
-  showToast: false,
-  msgTitle: '',
-  msgContent: ''
+  loading: false
 }
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -23,18 +18,6 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false
-      }
-    case SHOW_TOAST:
-      return {
-        ...state,
-        showToast: true,
-        msgTitle: action.title,
-        msgContent: action.content
-      }
-    case HIDE_TOAST:
-      return {
-        ...state,
-        showToast: false
       }
     default:
       return state

@@ -3785,12 +3785,6 @@ Home page css start here
 }
 .buying-btns .default-btn {
   border-radius: 5px;
-  background: transparent;
-  color: #fff;
-  border: 2px solid #fff;
-}
-.buying-btns .default-btn:hover {
-  color: #000000;
 }
 .buying-btns .default-btn:last-child {
   background: transparent;
@@ -4638,10 +4632,4 @@ input[type=number] {
 
 .stretch-size {
   flex-grow: 1;
-}
-
-input[type="date"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-calendar-picker-indicator {
-    display: block;
-    -webkit-appearance: block;
 }

@@ -1,6 +1,7 @@
-import { Fragment, useState, useEffect, useCallback } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Connex from '@vechain/connex'
+import BigNumber from 'bignumber.js'
 import axios from 'axios'
 
 import AuthorComponent from '../components/Author/'
@@ -11,21 +12,23 @@ import customNFTABI from '../constants/abi/custom'
 import marketplaceABI from '../constants/abi/marketplace'
 import { NODE, NETWORK } from '../constants/'
 
-import { startAction, endAction, showToast, hideToast } from '../actions/common'
+import { startAction, endAction } from '../actions/common'
 import { updateProfile } from '../actions/auth'
 
-import { findMethodABI, toUppercase, toLowercase, useInterval, sleep } from '../helpers/methods'
+import { findMethodABI, sleep, toUppercase, toLowercase, useInterval } from '../helpers/methods'
 
 import agent from '../api/'
+//import api_res from '../constants/testApiRes.json'
 
-const Author = ({ userWallet }) => {
+const Author = () => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [collection, setCollection] = useState('')
   const [data, setData] = useState(null)
   const [type, setType] = useState('')
-  const [title, setTitle] = useState('own')
+  const [title, setTitle] = useState('sale')
   const [group, setGroup] = useState('collection')
+  const [currency, setCurrency] = useState(0)
+  const [loading, setLoading] = useState(false)
   const [price, setPrice] = useState(1)
   const [royalty, setRoyalty] = useState(0)
   const [size, setSize] = useState(0)
@@ -39,7 +42,6 @@ const Author = ({ userWallet }) => {
   const [apiRes, setApiRes] = useState([])
   const [editing, setEditing] = useState(false)
   const [copies, setCopies] = useState(1)
-  const [address, setAddress] = useState('')
   const auth = useSelector(state => state.auth)
   const { currentUser } = auth
   const [userInfo, setUserInfo] = useState({
@@ -53,12 +55,136 @@ const Author = ({ userWallet }) => {
     photo: currentUser ? (currentUser.photo ? currentUser.photo : '') : '',
   })
   const dispatch = useDispatch()
+  let address = auth.currentUser.address
   const connex = new Connex({
     node: NODE,
     network: NETWORK
   })
+  useEffect(() => {
+    const init = async () => {
+      let cat = ['All Categories']
+      const res = await agent.contract.getContracts()
+      const api_res = res.data
+      setApiRes([...api_res])
+      if (group === 'collection') {
+        for (let i = 0; i < api_res.length; i++)
+          if (api_res[i].category === 'Collection') cat.push(api_res[i].name)
+      } else {
+        for (let i = 0; i < api_res.length; i++)
+          if (api_res[i].category !== 'Collection') cat.push(api_res[i].name)
+      }
+      setSubCategory(cat)
+      getOwnedItem(title, toUppercase(group), currentSelCat)
+    }
 
-  const getItemByIndex = useCallback(async (tokenInd, nftAddr, title, category, saleToks, contractABI, marketContract) => {
+    init()
+    if (currentUser.address) {
+      setUserInfo({
+        name: currentUser ? (currentUser.name ? currentUser.name : '') : '',
+        country: currentUser ? (currentUser.country ? currentUser.country : '') : '',
+        specialize: currentUser ? (currentUser.specialize ? currentUser.specialize : '') : '',
+        birthday: currentUser ? (currentUser.birthday ? currentUser.birthday : '') : '',
+        address: currentUser ? (currentUser.addr ? currentUser.addr : '') : '',
+        wallet: currentUser ? (currentUser.address ? currentUser.address : '') : '',
+        about: currentUser ? (currentUser.about ? currentUser.about : '') : '',
+        photo: currentUser ? (currentUser.photo ? currentUser.photo : '') : '',
+      })
+    }
+  }, [auth.currentUser, title, group, currentSelCat]);
+
+  const onFileChanged = async e => {
+    const file = e.target.files[0]
+    setFiletype(file.type)
+    if (file.type.startsWith('image')) {
+      setType('image')
+    } else if (file.type.startsWith('video')) {
+      setType('video')
+    } else if (file.type.startsWith('audio')) {
+      setType('audio')
+    }
+    var reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onloadend = e => setData(reader.result)
+  }
+
+  const create = async () => {
+    let customNFTContractAddr
+    if (category === 'Art') {
+      customNFTContractAddr = artContractAddr
+    } else if (category === 'Music') {
+      customNFTContractAddr = musicContractAddr
+    } else if (category === 'Collectibles') {
+      customNFTContractAddr = collectibleContractAddr
+    } else {
+      customNFTContractAddr = cartoonContractAddr
+    }
+    //Uploading to IPFS
+    const result = await agent.customNFT.create(address, name, description, data, filetype, banner)
+    const metadataURL = result.data.metadataURL
+    // const metadataURL = 'metadataURL'
+    //Minting Custom NFT
+    const connex = new Connex({
+      node: NODE,
+      network: NETWORK
+    })
+    const balanceOfABI = findMethodABI(marketplaceABI, 'balanceOf')
+    const balanceOfMethod = connex.thor.account(marketplaceContractAddr).method(balanceOfABI)
+    try {
+      let balanceRes = await balanceOfMethod.call(customNFTContractAddr, address)
+      const mintABI = findMethodABI(customNFTABI, 'mint')
+      const mintMethod = connex.thor.account(customNFTContractAddr)
+        .method(mintABI)
+        .caller(address)
+        .gas(1000000)
+        .gasPrice('1000000000000000')
+      console.log('minting:', metadataURL, copies, royalty)
+      const mintOutput = await mintMethod.call(metadataURL, copies, royalty)
+      console.log('mint output:', mintOutput)
+      dispatch(startAction())
+      /*
+      const tokenId = parseInt(mintOutput.decoded[0])
+      const approveABI = findMethodABI(customNFTABI, 'approve')
+      let approveMethod = connex.thor.account(customNFTContractAddr)
+        .method(approveABI)
+        .caller(address)
+      const createAuctionABI = findMethodABI(marketplaceABI, 'createAuction')
+      const createAuctionMethod = connex.thor.account(marketplaceContractAddr)
+        .method(createAuctionABI)
+        .caller(address)
+      const prc = BigNumber(price).times(BigNumber('1000000000000000000'))
+      */
+      await connex.vendor.sign('tx', [mintMethod.asClause(metadataURL, copies, royalty)]).request()
+      //await connex.vendor.sign('tx', [mintMethod.asClause(metadataURL, copies, royalty), approveMethod.asClause(marketplaceContractAddr, tokenId), createAuctionMethod.asClause(customNFTContractAddr, tokenId, prc.toFixed(), prc.toFixed(), 0)]).request()
+      dispatch(endAction())
+    } catch (err) {
+      console.log('error:', err)
+    }
+  }
+
+  useInterval(
+    () => {
+      updatePrice()
+    },
+    5000
+  )
+
+  const updatePrice = async () => {
+    const getCurrentPriceABI = findMethodABI(marketplaceABI, 'getCurrentPrice')
+    const connex = new Connex({
+      node: NODE,
+      network: NETWORK
+    })
+    let curMeta = metadata
+    const getCurrentPriceMethod = connex.thor.account(marketplaceContractAddr).method(getCurrentPriceABI)
+    await Promise.all(curMeta.map(async nft => nft.price = (await getCurrentPriceMethod.call(nft.contract, nft.tokenId)).decoded[0]))
+    setMetadata([...curMeta])
+  }
+
+  const getDecodedFromCall = (_res) => {
+    return _res?.decoded[0]
+  }
+
+  const getItemByIndex = async (tokenInd, nftAddr, title, category, saleToks, contractABI, marketContract) => {
     const tokenURI = getDecodedFromCall(await marketContract.method(findMethodABI(contractABI, 'tokenURI')).call(nftAddr, tokenInd))
     const tokenPrc = getDecodedFromCall(await marketContract.method(findMethodABI(contractABI, 'getCurrentPrice')).call(nftAddr, tokenInd))
     try {
@@ -85,6 +211,7 @@ const Author = ({ userWallet }) => {
           mdata.data.title = contract.name
         }
       }
+      //mdata.data.name = `#${mdata.data.edition}`
       mdata.data.contract = nftAddr
       mdata.data.tokenId = tokenInd
       mdata.data.price = tokenPrc === undefined ? '-' : tokenPrc
@@ -94,9 +221,9 @@ const Author = ({ userWallet }) => {
       console.log(err)
       return null
     }
-  }, [apiRes])
+  }
 
-  const getOwnedItem = useCallback(async (_title, _category, _subCategory, addr) => {
+  const getOwnedItem = async (_title, _category, _subCategory) => {
     const contractInfos = apiRes.filter(ind => { return ind.category === _category })
     const contractABI = marketplaceABI
     const marketContract = connex.thor.account(marketplaceContractAddr)
@@ -106,13 +233,13 @@ const Author = ({ userWallet }) => {
       await Promise.all(contractInfos.map(async contractInfo => {
         if (_subCategory === 'All Categories' || contractInfo.name === _subCategory) {
           const nftAddr = contractInfo.contractAddress
-          const tokenCount = getDecodedFromCall(await marketContract.method(findMethodABI(contractABI, 'balanceOf')).call(nftAddr, addr))
+          const tokenCount = getDecodedFromCall(await marketContract.method(findMethodABI(contractABI, 'balanceOf')).call(nftAddr, auth.currentUser.address))
           let tokenIndexes = []
           for (let i = 0; i < parseInt(tokenCount); ++i) {
             tokenIndexes.push(i)
           }
           await Promise.all(tokenIndexes.map(async tokenIndex => {
-            const tokenId = getDecodedFromCall(await marketContract.method(findMethodABI(contractABI, 'tokenOfOwnerByIndex')).call(nftAddr, addr, tokenIndex))
+            const tokenId = getDecodedFromCall(await marketContract.method(findMethodABI(contractABI, 'tokenOfOwnerByIndex')).call(nftAddr, auth.currentUser.address, tokenIndex))
             let tokenUri = getDecodedFromCall(await marketContract.method(findMethodABI(contractABI, 'tokenURI')).call(nftAddr, tokenId))
             let mdata
             try {
@@ -143,7 +270,7 @@ const Author = ({ userWallet }) => {
           const saleToks = getDecodedFromCall(await marketContract.method(findMethodABI(contractABI, 'getSaleTokens')).call(nftAddr))
           await Promise.all(saleToks.map(async tokenIndex => {
             const auctionRes = await marketContract.method(findMethodABI(contractABI, 'getAuction')).call(nftAddr, tokenIndex)
-            if (auctionRes.decoded.seller === addr) {
+            if (auctionRes.decoded.seller === address) {
               const tokenURI = getDecodedFromCall(await marketContract.method(findMethodABI(contractABI, 'tokenURI')).call(nftAddr, tokenIndex))
               const mdata = await getItemByIndex(tokenIndex, nftAddr, contractInfo.name, _category, saleToks, contractABI, marketContract)
               let groupImage, image = mdata.data.image
@@ -167,190 +294,23 @@ const Author = ({ userWallet }) => {
               }
               setMetadata([...temp])
             }
+            /*
+            const mdata = await getItemByIndex(tokenInd, nftAddr, contractInfo.name, _category, saleToks, contractABI, marketContract)
+            if (mdata !== null) {
+              //if (mdata !== null && (_title !== 'sale' || saleToks.includes(tokenInd))) {
+              temp.push(mdata.data)
+              setMetadata([...temp])
+            }1
+            */
           }))
         }
       }))
     }
-  }, [apiRes, connex.thor, getItemByIndex])
 
-  useEffect(() => {
-    const init = async () => {
-      if (!!userWallet) {
-        const res = await agent.user.getUser(userWallet)
-        const userData = res.data || {}
-        setUserInfo({
-          name: userData.name || '',
-          country: userData.country || '',
-          specialize: userData.specialize || '',
-          birthday: userData.birthday || '',
-          address: userData.address || '',
-          wallet: userData.wallet || '',
-          about: userData.about || '',
-          photo: userData.photo || '',
-        })
-      } else {
-        setUserInfo({
-          name: currentUser ? (currentUser.name ? currentUser.name : '') : '',
-          country: currentUser ? (currentUser.country ? currentUser.country : '') : '',
-          specialize: currentUser ? (currentUser.specialize ? currentUser.specialize : '') : '',
-          birthday: currentUser ? (currentUser.birthday ? currentUser.birthday : '') : '',
-          address: currentUser ? (currentUser.addr ? currentUser.addr : '') : '',
-          wallet: currentUser ? (currentUser.address ? currentUser.address : '') : '',
-          about: currentUser ? (currentUser.about ? currentUser.about : '') : '',
-          photo: currentUser ? (currentUser.photo ? currentUser.photo : '') : '',
-        })
-      }
-      setAddress(!!userWallet ? userWallet : currentUser.address)
-      let cat = ['All Categories']
-      let api_res = apiRes
-      if (apiRes.length === 0) {
-        const res = await agent.contract.getContracts()
-        api_res = res.data
-        setApiRes([...api_res])
-      }
-      api_res.filter(contract => contract.category === toUppercase(group)).map(contract => cat.push(contract.name))
-      setSubCategory([...cat])
-      if (title !== 'create') {
-        await getOwnedItem(title, toUppercase(group), currentSelCat, !!userWallet ? userWallet : currentUser.address)
-      }
-    }
 
-    init()
-  }, [currentUser, title, group, currentSelCat, userWallet, apiRes]);
-
-  const onFileChanged = async e => {
-    const file = e.target.files[0]
-    if (file.size > 150000000) {
-      dispatch(showToast('Creating NFT Failed', 'File Size is bigger than 150MB'))
-      dispatch(endAction())
-      setTimeout(() => dispatch(hideToast()), 3000)
-      return
-    }
-    console.log('file size:', file.size)
-    console.log('file type:', file.type)
-    setFiletype(file.type)
-    if (file.type.startsWith('image')) {
-      setType('image')
-    } else if (file.type.startsWith('video')) {
-      setType('video')
-    } else if (file.type.startsWith('audio')) {
-      setType('audio')
-    } else {
-      setType(file.type)
-    }
-    var reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onloadend = e => setData(reader.result)
-  }
-
-  const create = async () => {
-    if (!data) {
-      dispatch(showToast('Creating NFT Failed', 'Please select file'))
-      dispatch(endAction())
-      setTimeout(() => dispatch(hideToast()), 3000)
-      return
-    }
-    if (!name) {
-      dispatch(showToast('Creating NFT Failed', 'Please input the name of NFT'))
-      dispatch(endAction())
-      setTimeout(() => dispatch(hideToast()), 3000)
-      return
-    }
-    if (type !== 'image' && !banner) {
-      dispatch(showToast('Creating NFT Failed', 'Please select banner image'))
-      dispatch(endAction())
-      setTimeout(() => dispatch(hideToast()), 3000)
-      return
-    }
-    let customNFTContractAddr
-    if (category === 'Art') {
-      customNFTContractAddr = artContractAddr
-    } else if (category === 'Music') {
-      customNFTContractAddr = musicContractAddr
-    } else if (category === 'Collectibles') {
-      customNFTContractAddr = collectibleContractAddr
-    } else {
-      customNFTContractAddr = cartoonContractAddr
-    }
-    //Uploading to IPFS
-    dispatch(startAction())
-    let result
-    try {
-      result = await agent.customNFT.create(address, name, description, data, filetype, banner)
-    } catch (err) {
-      dispatch(showToast('Uploading Failed', 'Please try again later'))
-      dispatch(endAction())
-      setTimeout(() => dispatch(hideToast()), 3000)
-      return
-    }
-    if (!result.data.metadataURL) {
-      dispatch(showToast('Uploading Failed', 'Please try again later'))
-      dispatch(endAction())
-      setTimeout(() => dispatch(hideToast()), 3000)
-      return
-    }
-    const connex = new Connex({
-      node: NODE,
-      network: NETWORK
-    })
-    const balanceOfABI = findMethodABI(customNFTABI, 'balanceOf')
-    const balanceOfMethod = connex.thor.account(customNFTContractAddr)
-      .method(balanceOfABI)
-      .caller(address)
-    let balanceRes = await balanceOfMethod.call(currentUser.address)
-    const currentBalance = balanceRes.decoded[0]
-    const metadataURL = result.data.metadataURL
-    try {
-      const mintABI = findMethodABI(customNFTABI, 'mint')
-      const mintMethod = connex.thor.account(customNFTContractAddr)
-        .method(mintABI)
-        .caller(address)
-        .gas(1000000)
-        .gasPrice('1000000000000000')
-      await mintMethod.call(metadataURL, copies, royalty)
-      dispatch(startAction())
-      await connex.vendor.sign('tx', [mintMethod.asClause(metadataURL, copies, royalty)]).request()
-      while (1) {
-        balanceRes = await balanceOfMethod.call(currentUser.address)
-        if (balanceRes.decoded[0] !== currentBalance) {
-          break;
-        }
-        await sleep(1000)
-      }
-      dispatch(endAction())
-      dispatch(showToast('NFT Minting', 'You have successfully minted your NFT'))
-      setTimeout(() => dispatch(hideToast()), 3000)
-      setTitle('own')
-      setGroup('created')
-      setCurrentSelCat('All Categories')
-      getOwnedItem('own', 'Created', 'All Categories', address)
-    } catch (err) {
-      console.log('error:', err)
-      dispatch(endAction())
-    }
-  }
-
-  useInterval(
-    () => {
-      updatePrice()
-    },
-    5000
-  )
-
-  const updatePrice = async () => {
-    const getCurrentPriceABI = findMethodABI(marketplaceABI, 'getCurrentPrice')
-    const connex = new Connex({
-      node: NODE,
-      network: NETWORK
-    })
-    let curMeta = metadata
-    const getCurrentPriceMethod = connex.thor.account(marketplaceContractAddr).method(getCurrentPriceABI)
-    await Promise.all(curMeta.map(async nft => nft.price = (await getCurrentPriceMethod.call(nft.contract, nft.tokenId)).decoded[0]))
-    setMetadata([...curMeta])
-  }
-
-  const getDecodedFromCall = (_res) => {
-    return _res?.decoded[0]
+    // if (_title === 'sale') temp = temp.filter(res => { return res.price > 0 })
+    // if (_subCategory !== 'All Categories') temp = temp.filter(res => { return res.name === _subCategory })
+    // return temp
   }
 
   const onBannerChanged = e => {
@@ -422,12 +382,12 @@ const Author = ({ userWallet }) => {
   return <Fragment>
     <Banner title='Your VNFTs' subtitle='VeThugs Official' />
     <AuthorComponent
-      address={!!userWallet ? userWallet : currentUser.address}
+      address={address}
       name={name}
       description={description}
-      collection={collection}
       data={data}
       type={type}
+      currency={currency}
       price={price}
       royalty={royalty}
       size={size}
@@ -441,7 +401,6 @@ const Author = ({ userWallet }) => {
       editing={editing}
       userInfo={userInfo}
       copies={copies}
-      userWallet={userWallet}
       setName={setName}
       setRoyalty={setRoyalty}
       setSize={setSize}
@@ -456,7 +415,6 @@ const Author = ({ userWallet }) => {
       setEditing={onChangeEdit}
       setCurrentSelCat={setCurrentSelCat}
       setCopies={setCopies}
-      setCollection={setCollection}
       onFileChanged={onFileChanged}
       onChangePhoto={onChangePhoto}
       onSubmit={onSubmit}

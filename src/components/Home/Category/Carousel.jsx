@@ -12,15 +12,13 @@ const Carousel = ({ images, title, link }) => <div className='nft-item home-2 ca
           </div>)
         }
       </div> */}
-      <Link to={link}>
-        <div style={{ width: '100%' }}>
-          <img src={images[0]} alt='not found' />
-        </div>
-      </Link>
+      <div style={{ width: '100%' }}>
+        <img src={images[0]} alt='not found'/>
+      </div>
     </div>
     <div className='nft-content'>
       <div className='author-details'>
-        <h4 className='text-center'><Link to={link}>{title}</Link> </h4>
+        <h4><Link to={link}>{title}</Link> </h4>
       </div>
     </div>
   </div>

@@ -12,7 +12,7 @@ const NonProtectedRoute = props => {
   let currentUser = auth.currentUser
   // const address = localStorage.getItem('wallet')
   if (!!currentUser) {
-    return <Navigate to='/author' />
+    return <Navigate to='/author/123' />
   }
   let address = localStorage.getItem('wallet')
   if (!!address) {

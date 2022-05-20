@@ -5,7 +5,7 @@ import NFTItem from './NFTItem'
 import AuctionItem from '../Auctions/AuctionItem'
 import Select from '../../common/Select'
 // import SearchSmall from '../../common/SearchSmall'
-import LoadMore from '../../common/LoadMore'
+// import LoadMore from '../../common/LoadMore'
 
 const ExploreAll = ({ metadata, category, collections, collection, sortOption, saleTokens, setCategory, setCollection, setSortOption }) => <Fragment>
   <section className='explore-section padding-top padding-bottom'>
@@ -41,12 +41,14 @@ const ExploreAll = ({ metadata, category, collections, collection, sortOption, s
         <div className='explore-wrapper'>
           <div className='row justify-content-center gx-4 gy-3'>
             {
-              saleTokens.length === 0 ? <h2 style={{ margin: 'auto', textAlign: 'center' }}>No NFTs on Sale<br />Please Sell your NFT</h2> : metadata.map(collection => collection.map(nft => <div className='col-xl-3 col-lg-4 col-sm-6' key={nft.tokenId}>
-                {
-                  !!nft.endAt ? <AuctionItem group={nft.group} groupImage={nft.groupImage} bidderImgs={['/assets/images/seller/05.png']} winnerImg='/assets/images/seller/05.gif' winnerName='' nftName={nft.name} love={278} nftImg={nft.image} contract={nft.contract} tokenId={nft.tokenId} endAt={nft.endAt} price={`${BigNumber(nft.price).dividedBy(BigNumber('1000000000000000000')).toFixed(0)} VET`} /> : <NFTItem group={nft.group} groupImage={nft.groupImage} bidderImgs={['/assets/images/seller/05.png']} winnerImg='/assets/images/seller/05.gif' winnerName='' nftName={nft.name} love={278} nftImg={nft.image} contract={nft.contract} tokenId={nft.tokenId} price={`${BigNumber(nft.price).dividedBy(BigNumber('1000000000000000000')).toFixed(0)} VET`} />
-                }
-              </div>
-              ))
+              saleTokens.length === 0 ? <h2 style={{ margin: 'auto', textAlign: 'center' }}>No NFTs on Sale<br />Please Sell your NFT</h2> : metadata.map(collection => collection.map(nft => {
+                console.log("mapping:", nft.groupImage)
+                return <div className='col-xl-3 col-lg-4 col-sm-6' key={nft.tokenId}>
+                  {
+                    !!nft.endAt ? <AuctionItem group={nft.group} groupImage={nft.groupImage} bidderImgs={['/assets/images/seller/05.png']} winnerImg='/assets/images/seller/05.gif' winnerName='' nftName={nft.name} love={278} nftImg={nft.image} contract={nft.contract} tokenId={nft.tokenId} endAt={nft.endAt} price={`${BigNumber(nft.price).dividedBy(BigNumber('1000000000000000000')).toFixed(3)} VET`} /> : <NFTItem group={nft.group} groupImage={nft.groupImage} bidderImgs={['/assets/images/seller/05.png']} winnerImg='/assets/images/seller/05.gif' winnerName='' nftName={nft.name} love={278} nftImg={nft.image} contract={nft.contract} tokenId={nft.tokenId} price={`${BigNumber(nft.price).dividedBy(BigNumber('1000000000000000000')).toFixed(3)} VET`} />
+                  }
+                </div>
+              }))
             }
           </div>
           {/* <LoadMore /> */}

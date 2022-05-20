@@ -1,3 +1,5 @@
+import Select from '../common/Select'
+import LoadMore from '../common/LoadMore'
 import ActivityItem from './ActivityItem'
 import Filter from './Filter'
 
@@ -59,3 +61,44 @@ const Activity = ({ sortOption, filter, setSortOption, onChangeFilter }) => {
 }
 
 export default Activity
+/*
+<Filter items={[
+  {
+    label: 'Listing',
+    active: false,
+    icon: 'icofont-listine-dots'
+  }, {
+    label: 'Purchases',
+    active: true,
+    icon: 'icofont-cart'
+  }, {
+    label: 'Sales',
+    active: false,
+    icon: 'icofont-sale-discount'
+  }, {
+    label: 'Transfers',
+    active: false,
+    icon: 'icofont-retweet'
+  }, {
+    label: 'Burns',
+    active: false,
+    icon: 'icofont-fire-burn'
+  }, {
+    label: 'Bids',
+    active: false,
+    icon: 'icofont-court-hammer'
+  }, {
+    label: 'Likes',
+    active: false,
+    icon: 'icofont-like'
+  }, {
+    label: 'Following',
+    active: false,
+    icon: 'icofont-favourite'
+  }, {
+    label: 'Recent',
+    active: false,
+    icon: 'icofont-history'
+  }
+]} />
+*/

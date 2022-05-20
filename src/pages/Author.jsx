@@ -1,10 +1,5 @@
-import { useParams } from 'react-router-dom'
-
 import AuthorContainer from '../containers/Author'
 
-const Author = () => {
-  const { id } = useParams()
-  return <AuthorContainer userWallet={id} />
-}
+const Author = () => <AuthorContainer />
 
 export default Author

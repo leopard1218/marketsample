@@ -1,0 +1,72 @@
+[
+    {
+        "_id": "61be35c5903e10dee1ce950f",
+        "name": "VeThug",
+        "category": "collection",
+        "contractAddress": "0x861bb54dBD5F584216A369D37872fFcdF6f79341",
+        "bannerImg": "http://ipfs.io/1.jpg",
+        "symbolImg": "http://ipfs.io/2.jpg",
+        "description": "VeThugs NFT",
+        "website": "https://vethugs.com",
+        "discord": "discord.vethugs.com",
+        "twitter": "twitter.vethugs.com",
+        "email": "vethugs.mail.com",
+        "__v": 0
+    },
+    {
+        "_id": "61be35c5903e10dee1ce950g",
+        "name": "Art",
+        "category": "custom",
+        "contractAddress": "0x3A250E0430B11596E5b05a022ddDea70e7979aF7",
+        "bannerImg": "http://ipfs.io/1.jpg",
+        "symbolImg": "http://ipfs.io/2.jpg",
+        "description": "Custom Art",
+        "website": "https://art.com",
+        "discord": "discord.art.com",
+        "twitter": "twitter.art.com",
+        "email": "art.mail.com",
+        "__v": 0
+    },
+    {
+        "_id": "61be35c5903e10dee1ce950h",
+        "name": "Cartoon",
+        "category": "custom",
+        "contractAddress": "0xd0E4e472E90e5988A3138b85d52D17924BC4c314",
+        "bannerImg": "http://ipfs.io/1.jpg",
+        "symbolImg": "http://ipfs.io/2.jpg",
+        "description": "Custom Cartoon",
+        "website": "https://cartoon.com",
+        "discord": "discord.cartoon.com",
+        "twitter": "twitter.cartoon.com",
+        "email": "cartoon.mail.com",
+        "__v": 0
+    },
+    {
+        "_id": "61be35c5903e10dee1ce950i",
+        "name": "Collectible",
+        "category": "custom",
+        "contractAddress": "0x61FaEe1f5837845b1C55edfCc6C552db04118086",
+        "bannerImg": "http://ipfs.io/1.jpg",
+        "symbolImg": "http://ipfs.io/2.jpg",
+        "description": "Custom Collectible",
+        "website": "https://collectible.com",
+        "discord": "discord.collectible.com",
+        "twitter": "twitter.collectible.com",
+        "email": "collectible.mail.com",
+        "__v": 0
+    },
+    {
+        "_id": "61be35c5903e10dee1ce950j",
+        "name": "Music",
+        "category": "custom",
+        "contractAddress": "0x7d16b09D1829fdBB38a54C8af16435aDf328998b",
+        "bannerImg": "http://ipfs.io/1.jpg",
+        "symbolImg": "http://ipfs.io/2.jpg",
+        "description": "Custom Music",
+        "website": "https://music.com",
+        "discord": "discord.music.com",
+        "twitter": "twitter.music.com",
+        "email": "music.mail.com",
+        "__v": 0
+    }
+]

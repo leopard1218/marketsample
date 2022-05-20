@@ -20,11 +20,11 @@ const Footer = () => <footer className='footer-section style-2'>
                 <h4>Join the Community</h4>
               </div>
               <ul className='social-list d-flex flex-wrap align-items-center mb-0'>
-                <li className='social-link'><a href='https://twitter.com/BlackVeMarket'
+                <li className='social-link'><a href='https://twitter.com/VeThugs'
                   data-blast='bgColor'><i className='icofont-twitter'></i></a></li>
                 <li className='social-link'><a href='https://discord.gg/V9TMVR8x'
                   data-blast='bgColor'><i className='icofont-user'></i></a></li>
-                <li className='social-link'><a href='https://www.instagram.com/blackvemarket/'
+                <li className='social-link'><a href='https://www.instagram.com/vethugsofficial/'
                   data-blast='bgColor'><i className='icofont-instagram'></i></a></li>
               </ul>
             </div>

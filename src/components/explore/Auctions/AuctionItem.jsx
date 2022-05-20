@@ -14,26 +14,18 @@ const AuctionItem = ({ title, contract, tokenId, bidderImgs, winnerImg, winnerNa
         <img src={nftImg} alt='nft-img' />
         <Countdown date={endAt} renderer={({ days, hours, minutes, seconds, completed }) => completed ? '' : <ul className='nft-countdown count-down' data-date='July 05, 2022 21:14:01'
           data-blast='bgColor'>
-          {
-            days > 0 && <li>
-              <span className='days'>{days}</span><span className='count-txt'>D</span>
-            </li>
-          }
-          {
-            (days > 0 || hours > 0) && <li>
-              <span className='hours'>{hours}</span><span className='count-txt'>H</span>
-            </li>
-          }
-          {
-            (days > 0 || hours > 0 || minutes > 0) && <li>
-              <span className='minutes'>{minutes}</span><span className='count-txt'>M</span>
-            </li>
-          }
-          {
-            (days > 0 || hours > 0 || minutes > 0 || seconds > 0) && <li>
-              <span className='seconds'>{seconds}</span><span className='count-txt'>S</span>
-            </li>
-          }
+          <li>
+            <span className='days'>{days}</span><span className='count-txt'>D</span>
+          </li>
+          <li>
+            <span className='hours'>{hours}</span><span className='count-txt'>H</span>
+          </li>
+          <li>
+            <span className='minutes'>{minutes}</span><span className='count-txt'>M</span>
+          </li>
+          <li>
+            <span className='seconds'>{seconds}</span><span className='count-txt'>S</span>
+          </li>
         </ul>} />
       </div>
       <div className='nft-content'>

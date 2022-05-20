@@ -8,8 +8,6 @@ import { connectWallet, updateProfile } from '../actions/auth'
 import Banner from '../components/common/Banner'
 import WalletComponent from '../components/Wallet'
 
-import { NETWORK } from '../constants/'
-
 import agent from '../api/'
 // import WalletComponent from '../components/Wallet'
 
@@ -17,7 +15,7 @@ const Wallet = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const connect = () => {
-    let newvendor = new Connex.Vendor(NETWORK)
+    let newvendor = new Connex.Vendor('test')
     newvendor
       .sign('cert', {
         purpose: 'identification',
@@ -29,20 +27,22 @@ const Wallet = () => {
       .request()
       .then(async res => {
         localStorage.setItem('wallet', res.annex.signer)
+        console.log('walletaddress:', res.annex.signer)
         dispatch(connectWallet(res.annex.signer))
         const addr = res.annex.signer
         if (addr) {
           dispatch(connectWallet(addr))
-          const res = await agent.user.getUser(addr)
+          const res = await agent.user.getMe(addr)
+          console.log('my data:', res.data)
           if (res.data !== null) {
             dispatch(updateProfile(res.data))
           }
         }
-        navigate('/author')
+        navigate('/author/123')
       })
   }
   return <Fragment>
-    <Banner title='Connect your wallet' subtitle='' />
+    <Banner title='Connect your wallet' subtitle='Connect with one of the available wallets' />
     <WalletComponent connectWallet={connect} />
   </Fragment>
 }

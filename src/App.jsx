@@ -5,6 +5,7 @@ import {
   Navigate
 } from 'react-router-dom'
 
+// import Preloader from './components/Preloader';
 import Header from './containers/Header'
 import Footer from './components/common/Footer'
 import ScrollToTop from './components/common/ScrollToTop'
@@ -20,15 +21,15 @@ import Blog from './pages/news/Blog'
 import ForgotPassword from './pages/ForgotPassword'
 import Wallet from './pages/Wallet'
 import AuthorAll from './pages/AuthorAll'
+import Create from './pages/Create'
 import Preloader from './containers/Preloader'
 import ProtectedRoute from './helpers/ProtectedRoute'
 import NonProtectedRoute from './helpers/NonProtectedRoute'
 
-import Toast from './containers/Toast'
-
 function App() {
   return (
     <Fragment>
+      {/* <Preloader/> */}
       <Header />
       <Routes>
         <Route exact path='/' element={<Home />} />
@@ -46,19 +47,14 @@ function App() {
         </Route>
         <Route path='author/all' element={<AuthorAll />} />
         <Route path='author/:id' element={<ProtectedRoute><Author /></ProtectedRoute>} />
-        <Route path='author' element={<ProtectedRoute><Author /></ProtectedRoute>} />
         <Route path='forgotPassword' element={<ForgotPassword />} />
         <Route path='wallet' element={<NonProtectedRoute><Wallet /></NonProtectedRoute>} />
+        <Route path='create' element={<Create />} />
         <Route path='*' element={<Navigate to='/' />} />
       </Routes>
-      <Toast />
       <Footer />
       <ScrollToTop />
       <Preloader />
-      {/* <Footer />
-      <ScrollToTop />
-      <Preloader />
-      <Toast /> */}
     </Fragment>
   );
 }

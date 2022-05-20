@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Logo from './Logo'
+import Searchbox from './Searchbox'
 import Menu from './Menu'
 
 const Header = ({ address, disconnect }) => <header className='header style-2'>

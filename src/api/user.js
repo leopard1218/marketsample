@@ -6,7 +6,7 @@ const userApi = {
     user,
     wallet
   }),
-  getUser: wallet => axios.get(`${API_URL}/auth/${wallet}`)
+  getMe: wallet => axios.get(`${API_URL}/auth/${wallet}`)
 }
 
 export default userApi

@@ -32,7 +32,7 @@ const Menu = ({ address }) => <div className='header__menu ms-auto'>
 
 
     <li className='header__nav-item'>
-      <Link className='header__nav-link' to='/author'>My Items</Link>
+      <Link className='header__nav-link' to='/author/123'>My Items</Link>
     </li>
   </ul>
 </div>

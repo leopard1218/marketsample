@@ -22,11 +22,11 @@ const AuthorAll = () => <section className='explore-section padding-top padding-
                 </div>
                 <div className='nft-content'>
                   <div className='author-thumb'>
-                    <Link to='/author' className='veryfied'><img loading='lazy'
+                    <Link to='/author/123' className='veryfied'><img loading='lazy'
                       src='/assets/images/seller/04.png' alt='author-img' /></Link>
                   </div>
                   <div className='author-details'>
-                    <h5><Link to='/author'>Gihan Fernindo</Link></h5>
+                    <h5><Link to='/author/123'>Gihan Fernindo</Link></h5>
                     <p className='nft-price yellow-color'>$23,002.98</p>
                   </div>
                 </div>
@@ -41,11 +41,11 @@ const AuthorAll = () => <section className='explore-section padding-top padding-
                 </div>
                 <div className='nft-content'>
                   <div className='author-thumb'>
-                    <Link to='/author' className='veryfied'><img loading='lazy'
+                    <Link to='/author/123' className='veryfied'><img loading='lazy'
                       src='/assets/images/seller/04.gif' alt='author-img' /></Link>
                   </div>
                   <div className='author-details'>
-                    <h5><Link to='/author'>X31le eko Fernindo</Link> </h5>
+                    <h5><Link to='/author/123'>X31le eko Fernindo</Link> </h5>
                     <p className='nft-price yellow-color'>$23,002.98</p>
                   </div>
                 </div>
@@ -60,11 +60,11 @@ const AuthorAll = () => <section className='explore-section padding-top padding-
                 </div>
                 <div className='nft-content'>
                   <div className='author-thumb'>
-                    <Link to='/author' className='veryfied'><img loading='lazy'
+                    <Link to='/author/123' className='veryfied'><img loading='lazy'
                       src='/assets/images/seller/03.png' alt='author-img' /></Link>
                   </div>
                   <div className='author-details'>
-                    <h5><Link to='/author'>Jhon Doe </Link> </h5>
+                    <h5><Link to='/author/123'>Jhon Doe </Link> </h5>
                     <p className='nft-price yellow-color'>$23,002.98</p>
                   </div>
                 </div>
@@ -79,11 +79,11 @@ const AuthorAll = () => <section className='explore-section padding-top padding-
                 </div>
                 <div className='nft-content'>
                   <div className='author-thumb'>
-                    <Link to='/author' className='veryfied'><img loading='lazy'
+                    <Link to='/author/123' className='veryfied'><img loading='lazy'
                       src='/assets/images/seller/03.png' alt='author-img' /></Link>
                   </div>
                   <div className='author-details'>
-                    <h5><Link to='/author'>Jhon Doe </Link> </h5>
+                    <h5><Link to='/author/123'>Jhon Doe </Link> </h5>
                     <p className='nft-price yellow-color'>$23,002.98</p>
                   </div>
                 </div>
@@ -98,11 +98,11 @@ const AuthorAll = () => <section className='explore-section padding-top padding-
                 </div>
                 <div className='nft-content'>
                   <div className='author-thumb'>
-                    <Link to='/author' className='veryfied'><img loading='lazy'
+                    <Link to='/author/123' className='veryfied'><img loading='lazy'
                       src='/assets/images/seller/02.png' alt='author-img' /></Link>
                   </div>
                   <div className='author-details'>
-                    <h5><Link to='/author'>Imao XO9 </Link> </h5>
+                    <h5><Link to='/author/123'>Imao XO9 </Link> </h5>
                     <p className='nft-price yellow-color'>$23,002.98</p>
                   </div>
                 </div>
@@ -117,11 +117,11 @@ const AuthorAll = () => <section className='explore-section padding-top padding-
                 </div>
                 <div className='nft-content'>
                   <div className='author-thumb'>
-                    <Link to='/author' className='veryfied'><img loading='lazy'
+                    <Link to='/author/123' className='veryfied'><img loading='lazy'
                       src='/assets/images/seller/02.png' alt='author-img' /></Link>
                   </div>
                   <div className='author-details'>
-                    <h5><Link to='/author'>Imao XO9 </Link> </h5>
+                    <h5><Link to='/author/123'>Imao XO9 </Link> </h5>
                     <p className='nft-price yellow-color'>$23,002.98</p>
                   </div>
                 </div>
@@ -136,11 +136,11 @@ const AuthorAll = () => <section className='explore-section padding-top padding-
                 </div>
                 <div className='nft-content'>
                   <div className='author-thumb'>
-                    <Link to='/author' className='veryfied'><img loading='lazy'
+                    <Link to='/author/123' className='veryfied'><img loading='lazy'
                       src='/assets/images/seller/04.gif' alt='author-img' /></Link>
                   </div>
                   <div className='author-details'>
-                    <h5><Link to='/author'>5eo Le1 </Link> </h5>
+                    <h5><Link to='/author/123'>5eo Le1 </Link> </h5>
                     <p className='nft-price yellow-color'>$23,002.98</p>
                   </div>
                 </div>
@@ -155,11 +155,11 @@ const AuthorAll = () => <section className='explore-section padding-top padding-
                 </div>
                 <div className='nft-content'>
                   <div className='author-thumb'>
-                    <Link to='/author' className='veryfied'><img loading='lazy'
+                    <Link to='/author/123' className='veryfied'><img loading='lazy'
                       src='/assets/images/seller/07.png' alt='author-img' /></Link>
                   </div>
                   <div className='author-details'>
-                    <h5><Link to='/author'>Gihan Fernindo</Link> </h5>
+                    <h5><Link to='/author/123'>Gihan Fernindo</Link> </h5>
                     <p className='nft-price yellow-color'>$23,002.98</p>
                   </div>
                 </div>

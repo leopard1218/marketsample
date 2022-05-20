@@ -41,9 +41,45 @@ const Auctions = ({ metadata, category, collections, collection, sortOption, loa
           <div className='row justify-content-center gx-4 gy-3'>
             {
               metadata.length > 0 ? metadata.map(collection => collection.map(nft => <div className='col-xl-3 col-lg-4 col-sm-6' key={nft.tokenId}>
-                <AuctionItem bidderImgs={[]} winnerImg='/assets/images/seller/04.png' winnerName='Gucci Lucas' nftName={nft.name} price={`${BigNumber(nft.price).dividedBy(BigNumber('1000000000000000000')).toFixed(0)} VET`} love={230} nftImg={nft.image} contract={nft.contract} tokenId={nft.tokenId} group={nft.group} groupImage={nft.groupImage} endAt={nft.endAt} />
+                <AuctionItem bidderImgs={[]} winnerImg='/assets/images/seller/04.png' winnerName='Gucci Lucas' nftName={nft.name} price={`${BigNumber(nft.price).dividedBy(BigNumber('1000000000000000000')).toFixed(3)} VET`} love={230} nftImg={nft.image} contract={nft.contract} tokenId={nft.tokenId} group={nft.group} groupImage={nft.groupImage} endAt={nft.endAt} />
               </div>)) : <h2 style={{ margin: 'auto', textAlign: 'center' }}>No NFTs on Auction<br />Please place your NFT on Auction</h2>
             }
+            {/* <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={[]} winnerImg='/assets/images/seller/04.png' winnerName='Gucci Lucas' nftImg='/assets/images/nft-item/02.gif' nftName='EUPHORIA de' price={0.34} love={230} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={['/assets/images/seller/01.png', '/assets/images/seller/01.gif']} winnerImg='/assets/images/seller/02.png' winnerName='Ecalo jers' nftImg='/assets/images/nft-item/05.jpg' nftName='Mewao com de' price={0.34} love={278} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={['/assets/images/seller/02.png', '/assets/images/seller/05.png']} winnerImg='/assets/images/seller/04.png' winnerName='Hola moc' nftImg='/assets/images/nft-item/01.jpg' nftName='pet mice rio' price={0.34} love={340} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={['/assets/images/seller/06.png']} winnerImg='/assets/images/seller/05.gif' winnerName='Logicto pen' nftImg='/assets/images/nft-item/03.gif' nftName='Logical Impact' price={0.34} love={330} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={['/assets/images/seller/06.png', '/assets/images/seller/07.gif']} winnerImg='/assets/images/seller/09.png' winnerName='unique lo' nftImg='/assets/images/nft-item/03.jpg' nftName='Fly on high' price={0.34} love={355} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={[]} winnerImg='/assets/images/seller/05.gif' winnerName='Monica bel' nftImg='/assets/images/nft-item/06.gif' nftName='kiara rodri de' price={0.34} love={60} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={['/assets/images/seller/08.gif', '/assets/images/seller/01.png']} winnerImg='/assets/images/seller/11.png' winnerName='Gucci L.' nftImg='/assets/images/nft-item/04.jpg' nftName='EUPHORIA de' price={0.34} love={230} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={['/assets/images/seller/01.png', '/assets/images/seller/07.png']} winnerImg='/assets/images/seller/09.png' winnerName='Homies wall' nftImg='/assets/images/nft-item/07.jpg' nftName='EUPHORIA de' price={0.34} love={930} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={['/assets/images/seller/06.png']} winnerImg='/assets/images/seller/05.gif' winnerName='Logicto pen' nftImg='/assets/images/nft-item/08.jpg' nftName='Logical Impact' price={0.34} love={330} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={['/assets/images/seller/02.png', '/assets/images/seller/05.png']} winnerImg='/assets/images/seller/04.png' winnerName='Hola moc' nftImg='/assets/images/nft-item/05.gif' nftName='pet mice rio' price={0.34} love={340} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={['/assets/images/seller/01.png', '/assets/images/seller/01.gif']} winnerImg='/assets/images/seller/02.png' winnerName='Mewao com de' nftImg='/assets/images/nft-item/09.jpg' nftName='pet mice rio' price={0.34} love={278} />
+            </div>
+            <div className='col-xl-3 col-lg-4 col-sm-6'>
+              <AuctionItem bidderImgs={[]} winnerImg='/assets/images/seller/04.png' winnerName='Gucci Lucas' nftImg='/assets/images/nft-item/04.gif' nftName='EUPHORIA de' price={0.34} love={230} />
+            </div> */}
           </div>
           {/* <LoadMore /> */}
         </div>

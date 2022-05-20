@@ -1,8 +1,3 @@
-// export const artContractAddr = '0x87a4E53d6E65CDfadA102818E9EAb70D1230391F'
-// export const musicContractAddr = '0x75154cABe3E7d3162b39a821B44e801a4C74e81C'
-// export const collectibleContractAddr = '0xd80e22A9E038708D265332f64833df525c91e6E1'
-// export const cartoonContractAddr = '0xB879698A650ed769Cca460e9dbF18e60A66E620a'
-// export const marketplaceContractAddr = '0x1605aCE7D088F0C4D839F2e02d950D67bD25b2F2'
 export const artContractAddr = '0xFeAF1338582E6186fEc4191721857a1E2068b757'
 export const musicContractAddr = '0xFa10C8b3aDB2a8e9Aa368bc2632CDBd919d139CD'
 export const collectibleContractAddr = '0x2A2bF6f212f4e19F0705ca7093CF4A169b5E671F'

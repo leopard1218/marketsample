@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { connectWallet, disconnectWallet } from '../actions/auth'
@@ -14,21 +14,19 @@ const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { currentUser } = auth
-  useEffect(() => {
-    const init = async () => {
-      if (!currentUser || !currentUser.address) {
-        let addr = localStorage.getItem('wallet')
-        if (addr) {
-          dispatch(connectWallet(addr))
-          const res = await agent.user.getUser(addr)
-          if (res.data !== null) {
-            dispatch(updateProfile(res.data))
-          }
+  useEffect(async () => {
+    if (!currentUser || !currentUser.address) {
+      let addr = localStorage.getItem('wallet')
+      if (addr) {
+        dispatch(connectWallet(addr))
+        const res = await agent.user.getMe(addr)
+        console.log('my data:', res.data)
+        if (res.data !== null) {
+          dispatch(updateProfile(res.data))
         }
       }
     }
-    init()
-  }, [currentUser, dispatch])
+  }, [])
   const disconnect = () => {
     localStorage.removeItem('wallet')
     dispatch(disconnectWallet())

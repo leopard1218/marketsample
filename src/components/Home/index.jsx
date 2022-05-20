@@ -5,7 +5,7 @@ import Banner from './Banner'
 import Category from './Category/'
 import PopularArtists from './PopularArtists/'
 // import MarketDrops from './MarketDrops/'
-// import BlackVeMarketNews from './BlackVeMarketNews/'
+import BlackVeMarketNews from './BlackVeMarketNews/'
 
 const Home = ({ collections }) => {
   const auth = useSelector(state => state.auth)
@@ -15,7 +15,7 @@ const Home = ({ collections }) => {
     <Category />
     <PopularArtists collections={collections} />
     {/* <MarketDrops /> */}
-    {/* <BlackVeMarketNews /> */}
+    <BlackVeMarketNews />
   </Fragment>
 }
 

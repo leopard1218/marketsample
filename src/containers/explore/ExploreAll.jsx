@@ -32,51 +32,51 @@ const created = [{
 }]
 
 const ExploreAll = ({ curCategory, curCollection }) => {
+  const [addresses, setAddresses] = useState([])
+  const [names, setNames] = useState([])
   const [saleTokens, setSaleTokens] = useState([])
+  const [tokenURIs, setTokenURIs] = useState([])
   const [metadata, setMetadata] = useState([])
   const [collections, setCollections] = useState(created)
   const [category, setCategory] = useState(curCategory || 'created')
   const [collection, setCollection] = useState(curCollection || 'all')
   const [sortOption, setSortOption] = useState('newest')
   const [contracts, setContracts] = useState([])
-  useEffect(() => {
-    const init = async () => {
-      let ctrcts = contracts
-      if (ctrcts.length === 0) {
-        const res = await agent.contract.getContracts()
-        ctrcts = res.data
-        setContracts([...res.data])
-      }
-      let contractAddrs = []
-      if (category === 'collections') {
-        let curCollections = [{
-          value: 'all',
-          label: 'All Category'
-        }]
-        ctrcts.filter(contract => contract.category === 'Collection').map(contract => curCollections.push({
+  useEffect(async () => {
+    const res = await agent.contract.getContracts()
+    console.log("contracts:", res.data)
+    setContracts([...res.data])
+    let contractAddrs = []
+    if (category === 'collections') {
+      let curCollections = [{
+        value: 'all',
+        label: 'All Category'
+      }]
+      res.data.map(contract => {
+        curCollections.push({
           value: contract.contractAddress,
           label: contract.name
-        }))
-        setCollections([...curCollections])
-      }
-      if (collection === 'all') {
-        if (category === 'created') {
-          contractAddrs = [
-            artContractAddr,
-            musicContractAddr,
-            collectibleContractAddr,
-            cartoonContractAddr
-          ]
-        } else {
-          ctrcts.filter(contract => contract.category === 'Collection').map(contract => contractAddrs.push(contract.contractAddress))
-        }
-      } else {
-        contractAddrs = [collection]
-      }
-      loadSales(contractAddrs, ctrcts, category)
+        })
+      })
+      console.log('collectiosn in useEffect:', curCollections)
+      setCollections([...curCollections])
     }
-    init()
-  }, [category, collection, contracts])
+    if (collection === 'all') {
+      if (category === 'created') {
+        contractAddrs = [
+          artContractAddr,
+          musicContractAddr,
+          collectibleContractAddr,
+          cartoonContractAddr
+        ]
+      } else {
+        res.data.map(contract => contractAddrs.push(contract.contractAddress))
+      }
+    } else {
+      contractAddrs = [curCollection]
+    }
+    loadSales(contractAddrs, res.data, category)
+  }, [])
   useInterval(
     () => {
       updatePrice()
@@ -101,9 +101,12 @@ const ExploreAll = ({ curCategory, curCollection }) => {
       network: NETWORK
     })
     await Promise.all(contractAddresses.map(async addr => {
+      console.log('contract:', addr, contracts, category)
       let prettyUrl = false, contract
       if (category === 'collections') {
+        console.log('checking the contract property')
         contract = contracts.find(ctrct => ctrct.contractAddress === addr)
+        console.log('my contract:', contract)
         prettyUrl = contract.prettyUrl
       }
       let uris = [], metadt = []
@@ -114,15 +117,19 @@ const ExploreAll = ({ curCategory, curCollection }) => {
       const getSaleTokensABI = findMethodABI(marketplaceABI, 'getSaleTokens')
       const getSaleTokensMethod = connex.thor.account(marketplaceContractAddr).method(getSaleTokensABI)
       const getSaleTokensRes = await getSaleTokensMethod.call(addr)
+      console.log('saletokens:', getSaleTokensRes)
       saleTkns.push(getSaleTokensRes.decoded[0])
       const tokenURIABI = findMethodABI(marketplaceABI, 'tokenURI')
       const tokenURIMethod = connex.thor.account(marketplaceContractAddr).method(tokenURIABI)
       const getCurrentPriceABI = findMethodABI(marketplaceABI, 'getCurrentPrice')
       const getCurrentPriceMethod = connex.thor.account(marketplaceContractAddr).method(getCurrentPriceABI)
       await Promise.all(getSaleTokensRes.decoded[0].map(async tkn => {
+        console.log('token:', tkn)
         const tokenId = parseInt(tkn)
         const tknURIRes = await tokenURIMethod.call(addr, tokenId)
+        console.log('tokenURI:', tknURIRes)
         let uri = prettyUrl ? (tknURIRes.decoded[0] + '.json') : tknURIRes.decoded[0]
+        console.log('uri:', uri)
         uris.push(uri)
         try {
           const metaRes = await axios.get(uri)
@@ -130,32 +137,23 @@ const ExploreAll = ({ curCategory, curCollection }) => {
           const priceRes = await getCurrentPriceMethod.call(addr, tokenId)
           const price = parseFloat(priceRes.decoded[0])
           let collectionName
-          let group = nameRes.decoded[0]
           if (category === 'created') {
-            if (addr === artContractAddr) {
+            if (addr === artContractAddr)
               collectionName = 'art'
-              group = 'Art'
-            }
-            else if (addr === cartoonContractAddr) {
+            else if (addr === cartoonContractAddr)
               collectionName = 'cartoon'
-              group = 'Cartoon'
-            }
-            else if (addr === collectibleContractAddr) {
-              collectionName = 'collectibles'
-              group = 'Collectible'
-            }
-            else {
+            else if (addr === collectibleContractAddr)
+              collectionName = 'collectible'
+            else
               collectionName = 'music'
-              group = 'Music'
-            }
           }
           const groupImage = category === 'created' ? `/assets/images/collections/${collectionName}.jpg` : contract.symbolImg
           const auctionRes = await connex.thor.account(marketplaceContractAddr).method(findMethodABI(marketplaceABI, 'getAuction')).call(addr, tokenId)
           const dur = parseInt(auctionRes.decoded[3]), start = parseInt(auctionRes.decoded[4])
           if (dur > 0 && new Date((start + dur) * 1000).getTime() > new Date().getTime()) {
-            metadt.push({ ...metaRes.data, contract: addr, tokenId, price, image, group, groupImage: groupImage, endAt: new Date((start + dur) * 1000).getTime() })
+            metadt.push({ ...metaRes.data, contract: addr, tokenId, price, image, group: nameRes.decoded[0], groupImage: groupImage, endAt: new Date((start + dur) * 1000).getTime() })
           } else {
-            metadt.push({ ...metaRes.data, contract: addr, tokenId, price, image, group, groupImage: groupImage })
+            metadt.push({ ...metaRes.data, contract: addr, tokenId, price, image, group: nameRes.decoded[0], groupImage: groupImage })
           }
         } catch (err) {
           console.log('error:', err)
@@ -164,10 +162,14 @@ const ExploreAll = ({ curCategory, curCollection }) => {
       tknURIs.push(uris)
       metadts.push(metadt)
     }))
+    setAddresses(contractAddresses)
+    setNames(nms)
     setSaleTokens([...saleTkns])
+    setTokenURIs(tknURIs)
     setMetadata(metadts)
   }
   const onChangeCategory = cat => {
+    console.log('change category:', cat)
     setMetadata([])
     setCategory(cat)
     setCollection('all')
@@ -189,7 +191,7 @@ const ExploreAll = ({ curCategory, curCollection }) => {
           value: contract.contractAddress,
           label: contract.name
         })
-        return curContracts.push(contract.contractAddress)
+        curContracts.push(contract.contractAddress)
       })
       setCollections([...curCollections])
       loadSales(curContracts, contracts, cat)
@@ -197,7 +199,6 @@ const ExploreAll = ({ curCategory, curCollection }) => {
   }
   const onChangeCollection = collection => {
     setCollection(collection)
-    setMetadata([])
     let addrs = []
     if (collection === 'all') {
       if (category === 'created') {

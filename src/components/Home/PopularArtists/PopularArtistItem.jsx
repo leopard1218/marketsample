@@ -11,12 +11,13 @@ const PopularArtistItem = ({ nftImg, artistImg, ranking, name, price, link }) =>
           <Link to={link} className='veryfied'><img
             src={artistImg} alt='author-img' /></Link>
         </div>
-        <div className='author-details d-flex flex-wrap align-items-center gap-15' style={{ flexDirection: 'row' }}>
+        <div className='author-details d-flex flex-wrap align-items-center gap-15'>
           <div className='author-number'>
             <h3 className='fs-36'>{ranking}</h3>
           </div>
-          <div className='author-det-info' style={{ flexGrow: 1 }}>
+          <div className='author-det-info'>
             <h5><Link to={link}>{name}</Link> </h5>
+            <p className='nft-price yellow-color'>{price}</p>
           </div>
         </div>
       </div>
